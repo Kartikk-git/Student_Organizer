@@ -180,10 +180,11 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="12dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="15dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="3dp">
+            app:cardElevation="3dp"
+            android:padding="5dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -193,9 +194,9 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/ic_student_cap"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_report"
                     android:padding="9dp" />
 
                 <TextView
@@ -208,8 +209,8 @@
                     android:textSize="14sp"/>
 
                 <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_arrow_forward"/>
 
             </LinearLayout>
@@ -219,8 +220,8 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="12dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="15dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp">
 
@@ -232,8 +233,8 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:background="@drawable/ic_report"
                     android:padding="9dp" />
 
@@ -244,20 +245,19 @@
                     android:layout_weight="1"
                     android:text="Attendance Report"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"/>
 
                 <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_arrow_forward"/>
-
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_marginBottom="18dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="3dp">
@@ -270,10 +270,10 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="@drawable/ic_notes"
-                    android:padding="9dp"/>
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_report"
+                    android:padding="9dp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -282,11 +282,11 @@
                     android:layout_weight="1"
                     android:text="Fee Statement"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"/>
 
                 <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:src="@drawable/ic_arrow_forward"/>
 
             </LinearLayout>

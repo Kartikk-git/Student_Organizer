@@ -13,9 +13,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
 import androidx.viewpager.widget.ViewPager
 import com.example.studentorganizer.R
+import com.example.studentorganizer.adapter.ViewPagerAdapter
 import com.example.studentorganizer.databinding.ActivityMainBinding
+import com.example.studentorganizer.fragments.AssignmentFragment
+import com.example.studentorganizer.fragments.CalendarFragment
 import com.example.studentorganizer.fragments.CourseFragment
 import com.example.studentorganizer.fragments.HomeFragment
+import com.example.studentorganizer.fragments.NotesFragment
 import com.example.studentorganizer.fragments.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
@@ -78,7 +82,9 @@ class MainActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(HomeFragment(), "Home")
         adapter.addFragment(CourseFragment(), "Course")
-        adapter.addFragment(ProfileFragment(), "Profile")
+        adapter.addFragment(NotesFragment(), "Notes")
+        adapter.addFragment(CalendarFragment(), "Calendar")
+        adapter.addFragment(ProfileFragment(), "Assignment")
         viewpager.adapter = adapter
     }
 
@@ -98,23 +104,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    // Pager Adapter for fragments
-    class ViewPagerAdapter(supportFragmentManager: FragmentManager) :
-        FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
-        private val fragmentList = ArrayList<Fragment>()
-        private val fragmentTitleList = ArrayList<String>()
-
-        override fun getItem(position: Int): Fragment = fragmentList[position]
-        override fun getPageTitle(position: Int): CharSequence = fragmentTitleList[position]
-        override fun getCount(): Int = fragmentList.size
-
-        fun addFragment(fragment: Fragment, title: String) {
-            fragmentList.add(fragment)
-            fragmentTitleList.add(title)
         }
     }
 }
