@@ -3,14 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black"
+        android:background="@color/white"
         android:paddingTop="28dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +22,7 @@
                 android:background="@drawable/ic_student_cap"
                 android:padding="10dp"
                 android:layout_margin="10dp"
-                app:tint="@color/white"/>
+                app:tint="@color/black"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -34,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Welcome"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:padding="5dp"/>
@@ -44,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="Name"
                     android:textSize="16sp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/gray_dark"
                     android:paddingHorizontal="5dp"/>
 
                 <LinearLayout
@@ -56,7 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="Semester"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray_dark"
                         android:paddingHorizontal="5dp"
                         android:paddingBottom="10dp"
                         android:textSize="14sp"/>
@@ -65,14 +64,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="5"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray_dark"
                         android:textSize="14sp" />
                     <TextView
                         android:id="@+id/tv_semester_year"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="2024-25"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray_dark"
                         android:textSize="14sp"
                         android:paddingHorizontal="5dp"/>
 
@@ -105,9 +104,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/gray_light"
+        android:background="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/gray_dark"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
