@@ -31,12 +31,12 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         // Enable the Action Bar title so the Top Bar can show context
-        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         setupViewPager(binding.tabViewpager)
 
         val sharedPref = getSharedPreferences("Details", MODE_PRIVATE)
-        val user = sharedPref.getString("name","User")
+        val user = sharedPref.getString("name","")
         binding.tvName.text = user
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onPageSelected(position: Int) {
                     val adapter = binding.tabViewpager.adapter as? ViewPagerAdapter
-                    
+
                     if (position < binding.bottomNavigation.menu.size) {
                         // Sync with Bottom Navigation for main tabs
                         binding.bottomNavigation.menu[position].isChecked = true
@@ -80,19 +80,11 @@ class MainActivity : AppCompatActivity() {
                         // Clear Bottom Navigation selection when on Profile (which is an Action, not a Tab)
                         uncheckAllBottomNavItems()
                     }
-                    
-                    // Set Top Bar Title to the current Fragment's name
-                    adapter?.let {
-                        supportActionBar?.title = it.getPageTitle(position)
-                    }
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {}
             }
         )
-        
-        // Set initial title
-        supportActionBar?.title = "Home"
     }
 
     private fun uncheckAllBottomNavItems() {

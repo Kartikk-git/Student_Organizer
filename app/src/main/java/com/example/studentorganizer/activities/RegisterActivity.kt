@@ -6,7 +6,11 @@ import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.studentorganizer.database.AppDatabase
+import com.example.studentorganizer.database.entity.User
 import com.example.studentorganizer.databinding.ActivityRegisterBinding
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -42,11 +46,21 @@ class RegisterActivity : AppCompatActivity() {
             }else if(!checked){
                 binding.cbAcceptTerms.error = "Please accept terms & conditions"
             }else{
+                val user = User(
+                    name = name,
+                    email = email,
+                    password = password
+                )
+                val db = AppDatabase.getDatabase(this)
+
+                lifecycleScope.launch {
+
+                    db.userDao().insertUser(user)
+
+                }
                 sharedPref.edit()
                     .putBoolean("isRegistered", true)
-                    .putString("email", email)
-                    .putString("name", name)
-                    .putString("password", password)
+                    .putString("loggedInEmail", email)
                     .putBoolean("isFirstTime", false)
                     .apply()
 
