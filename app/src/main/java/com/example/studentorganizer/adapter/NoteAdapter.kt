@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentorganizer.databinding.ItemNotesBinding
-import com.example.studentorganizer.model.Notes
+import com.example.studentorganizer.database.entity.Notes
 
 class NoteAdapter(
-    private val notes: List<Notes>
+    private val notes: MutableList<Notes>,
+    private val onEdit: (Notes) -> Unit,
+    private val onDelete: (Notes) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     inner class NoteViewHolder(
@@ -39,7 +41,22 @@ class NoteAdapter(
         holder.binding.tvNoteSubject.text = note.subject
         holder.binding.tvNoteContent.text = note.content
         holder.binding.tvNoteDate.text = note.date
+
+        holder.itemView.setOnClickListener {
+            onEdit(note)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            onDelete(note)
+            true
+        }
     }
 
     override fun getItemCount(): Int = notes.size
+
+    fun updateList(newNotes: List<Notes>) {
+        notes.clear()
+        notes.addAll(newNotes)
+        notifyDataSetChanged()
+    }
 }

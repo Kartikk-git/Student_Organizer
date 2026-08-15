@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="My Notes"
-        android:textSize="26sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,7 +26,7 @@
         android:layout_marginTop="4dp"
         android:text="Save and organize your study notes"
         android:textSize="14sp"
-        android:textColor="#777777"
+        android:textColor="@color/gray_dark"
         app:layout_constraintTop_toBottomOf="@id/tvNotesTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -49,6 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:contentDescription="Add Note"
+        app:backgroundTint="@color/black"
+        app:tint="@color/white"
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

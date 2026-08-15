@@ -1,23 +1,16 @@
 package com.example.studentorganizer.activities
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.get
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-import androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-import androidx.lifecycle.lifecycleScope
+import androidx.core.view.size
 import androidx.viewpager.widget.ViewPager
 import com.example.studentorganizer.R
 import com.example.studentorganizer.adapter.ViewPagerAdapter
-import com.example.studentorganizer.database.AppDatabase
 import com.example.studentorganizer.databinding.ActivityMainBinding
 import com.example.studentorganizer.fragments.AssignmentFragment
 import com.example.studentorganizer.fragments.CalendarFragment
@@ -25,40 +18,27 @@ import com.example.studentorganizer.fragments.CourseFragment
 import com.example.studentorganizer.fragments.HomeFragment
 import com.example.studentorganizer.fragments.NotesFragment
 import com.example.studentorganizer.fragments.ProfileFragment
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        db = AppDatabase.getDatabase(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        // Enable the Action Bar title so the Top Bar can show context
+        supportActionBar?.setDisplayShowTitleEnabled(true)
 
         setupViewPager(binding.tabViewpager)
 
         val sharedPref = getSharedPreferences("Details", MODE_PRIVATE)
-        val email = sharedPref.getString("loggedInEmail", null)
-        lifecycleScope.launch {
+        val user = sharedPref.getString("name","User")
+        binding.tvName.text = user
 
-            if (email != null) {
-
-                val user = db.userDao().getUserByEmail(email)
-
-                if (user != null) {
-                    binding.tvName.text = user.name
-                }
-            }
-        }
-
-        // Using the non-deprecated listener
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
@@ -85,38 +65,53 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Sync ViewPager with BottomNavigation
+        // Sync ViewPager with BottomNavigation and update Top Bar Title
         binding.tabViewpager.addOnPageChangeListener(
             object : ViewPager.OnPageChangeListener {
-
-                override fun onPageScrolled(
-                    position: Int,
-                    positionOffset: Float,
-                    positionOffsetPixels: Int
-                ) {
-                }
+                override fun onPageScrolled(pos: Int, off: Float, pixels: Int) {}
 
                 override fun onPageSelected(position: Int) {
-
-                    if (position < binding.bottomNavigation.menu.size()) {
+                    val adapter = binding.tabViewpager.adapter as? ViewPagerAdapter
+                    
+                    if (position < binding.bottomNavigation.menu.size) {
+                        // Sync with Bottom Navigation for main tabs
                         binding.bottomNavigation.menu[position].isChecked = true
+                    } else {
+                        // Clear Bottom Navigation selection when on Profile (which is an Action, not a Tab)
+                        uncheckAllBottomNavItems()
+                    }
+                    
+                    // Set Top Bar Title to the current Fragment's name
+                    adapter?.let {
+                        supportActionBar?.title = it.getPageTitle(position)
                     }
                 }
 
-                override fun onPageScrollStateChanged(state: Int) {
-                }
+                override fun onPageScrollStateChanged(state: Int) {}
             }
         )
+        
+        // Set initial title
+        supportActionBar?.title = "Home"
+    }
+
+    private fun uncheckAllBottomNavItems() {
+        val menu = binding.bottomNavigation.menu
+        menu.setGroupCheckable(0, true, false)
+        for (i in 0 until menu.size) {
+            menu[i].isChecked = false
+        }
+        menu.setGroupCheckable(0, true, true)
     }
 
     private fun setupViewPager(viewpager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(HomeFragment(), "Home")
-        adapter.addFragment(CourseFragment(), "Course")
+        adapter.addFragment(CourseFragment(), "Courses")
         adapter.addFragment(NotesFragment(), "Notes")
         adapter.addFragment(CalendarFragment(), "Calendar")
-        adapter.addFragment(AssignmentFragment(), "Assignment")
-        adapter.addFragment(ProfileFragment(), "Profile")
+        adapter.addFragment(AssignmentFragment(), "Assignments")
+        adapter.addFragment(ProfileFragment(), "Profile") // Added missing Profile fragment
         viewpager.adapter = adapter
     }
 
@@ -132,6 +127,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_profile -> {
+                // Navigate to Profile page in ViewPager
                 binding.tabViewpager.currentItem = 5
                 true
             }

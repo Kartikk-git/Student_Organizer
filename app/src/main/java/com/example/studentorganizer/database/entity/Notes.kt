@@ -3,12 +3,12 @@ package com.example.studentorganizer.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "users")
-data class User(
+@Entity(tableName = "notes")
+data class Notes(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-
-    val name: String,
-    val email: String,
-    val password: String
+    val title: String,
+    val subject: String,
+    val content: String,
+    val date: String
 )

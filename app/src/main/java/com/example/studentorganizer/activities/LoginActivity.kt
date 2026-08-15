@@ -5,21 +5,16 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.studentorganizer.database.AppDatabase
 import com.example.studentorganizer.databinding.ActivityLoginBinding
-import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        db = AppDatabase.getDatabase(this)
 
         val sharedPref = getSharedPreferences("Details", MODE_PRIVATE)
 
@@ -27,29 +22,27 @@ class LoginActivity : AppCompatActivity() {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
 
-            lifecycleScope.launch {
+            val registeredEmail = sharedPref.getString("email","")
+            val registeredPassword = sharedPref.getString("password","")
 
-                val user = db.userDao().loginUser(email, password)
+            if (registeredEmail == email && registeredPassword == password) {
 
-                if (user != null) {
+                sharedPref.edit()
+                    .putBoolean("isLoggedIn", true)
+                    .apply()
 
-                    sharedPref.edit()
-                        .putBoolean("isLoggedIn", true)
-                        .apply()
+                startActivity(
+                    Intent(this, MainActivity::class.java)
+                )
 
-                    startActivity(
-                        Intent(this@LoginActivity, MainActivity::class.java)
-                    )
+                finish()
 
-                    finish()
+            } else{
 
-                } else{
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "Invalid credentials",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                Toast.makeText(
+                    this, "Invalid credentials", Toast.LENGTH_SHORT
+                ).show()
+
             }
         }
 

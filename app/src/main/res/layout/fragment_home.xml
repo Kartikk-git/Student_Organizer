@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".fragments.HomeFragment">
 
     <LinearLayout
@@ -22,6 +23,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp">
 
             <LinearLayout
@@ -33,9 +35,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_up_arrow">
-
-                </ImageView>
+                    android:background="@drawable/ic_up_arrow"
+                    app:tint="@color/black"/>
 
                 <TextView
                     android:id="@+id/tv_attendance_percentage"
@@ -61,6 +62,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp">
 
             <LinearLayout
@@ -72,9 +74,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_report">
-
-                </ImageView>
+                    android:background="@drawable/ic_report"
+                    app:tint="@color/black"/>
 
                 <TextView
                     android:id="@+id/tv_assignments_due"
@@ -100,6 +101,7 @@
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp">
 
             <LinearLayout
@@ -111,9 +113,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_calendar_">
-
-                </ImageView>
+                    android:background="@drawable/ic_calendar_"
+                    app:tint="@color/black"/>
 
                 <TextView
                     android:id="@+id/tv_upcoming_exam_days_left"
@@ -151,8 +152,9 @@
         app:layout_constraintVertical_bias="0.0">
 
         <TextView
-            android:layout_width="300dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:layout_gravity="start"
             android:gravity="center_vertical"
             android:padding="10dp"
@@ -163,12 +165,13 @@
 
         <TextView
             android:id="@+id/tv_view_all_courses"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:gravity="center"
+            android:paddingHorizontal="10dp"
             android:text="View all"
-            android:textColor="@color/black"
+            android:textColor="@color/gray_dark"
             android:textSize="14sp" />
     </LinearLayout>
 

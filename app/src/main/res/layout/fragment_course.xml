@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".fragments.CourseFragment">
 
     <TextView
@@ -34,6 +35,7 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:text="Semester"
+            android:textColor="@color/gray_dark"
             android:gravity="center_vertical"
             android:padding="10dp"
             android:textSize="14sp"/>
@@ -42,13 +44,16 @@
             android:layout_width="30dp"
             android:layout_height="match_parent"
             android:text="5"
+            android:textColor="@color/gray_dark"
             android:textSize="14sp"
             android:gravity="center_vertical"/>
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="2024-25"
+            android:textColor="@color/gray_dark"
             android:textSize="14sp"
+            android:paddingHorizontal="10dp"
             android:gravity="center_vertical"/>
     </LinearLayout>
 

@@ -99,17 +99,17 @@ class OnboardingActivity : AppCompatActivity() {
 
     private fun updateDots(position: Int) {
 
-        dot1.setTextColor(ContextCompat.getColor(this, R.color.black))
-        dot2.setTextColor(ContextCompat.getColor(this, R.color.black))
-        dot3.setTextColor(ContextCompat.getColor(this, R.color.black))
+        dot3.setTextColor(ContextCompat.getColor(this, R.color.gray_medium))
+        dot1.setTextColor(ContextCompat.getColor(this, R.color.gray_medium))
+        dot2.setTextColor(ContextCompat.getColor(this, R.color.gray_medium))
 
         when (position) {
 
-            0 -> dot1.setTextColor(ContextCompat.getColor(this, R.color.gray))
+            0 -> dot1.setTextColor(ContextCompat.getColor(this, R.color.black))
 
-            1 -> dot2.setTextColor(ContextCompat.getColor(this, R.color.gray))
+            1 -> dot2.setTextColor(ContextCompat.getColor(this, R.color.black))
 
-            2 -> dot3.setTextColor(ContextCompat.getColor(this, R.color.gray))
+            2 -> dot3.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
     }
 }

@@ -6,13 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
-import com.example.studentorganizer.database.AppDatabase
 import com.example.studentorganizer.databinding.FragmentProfileBinding
-import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment() {
-    private lateinit var db: AppDatabase
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
 
@@ -20,21 +16,13 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        db = AppDatabase.getDatabase(requireContext())
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         
         val sharedPref = requireActivity().getSharedPreferences("Details", MODE_PRIVATE)
-        val email = sharedPref.getString("loggedInEmail", null)
-        
-        lifecycleScope.launch {
-            if (email != null) {
-                val user = db.userDao().getUserByEmail(email)
-                if (user != null) {
-                    binding.tvName.text = user.name
-                    binding.tvEmail.text = email
-                }
-            }
-        }
+        val name = sharedPref.getString("name", "User")
+        val email = sharedPref.getString("email", "")
+        binding.tvName.text = name
+        binding.tvEmail.text = email
 
         return binding.root
     }
@@ -43,6 +31,4 @@ class ProfileFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
