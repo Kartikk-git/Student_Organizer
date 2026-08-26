@@ -33,11 +33,10 @@
 
                     <ImageView
                         android:id="@+id/imgProfile"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:background="@drawable/ic_profile"
-                        android:padding="18dp"
-                        app:tint="@color/white"/>
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/ic_account_box"
+                        android:padding="18dp"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -201,7 +200,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_report"
+                    android:background="@drawable/ic_id_card"
                     android:padding="9dp"
                     app:tint="@color/black"/>
 
@@ -280,11 +279,11 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="20dp"
+                    android:layout_width="17dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_report"
+                    android:background="@drawable/ic_rupee"
                     android:padding="9dp"
-                    app:tint="@color/black"/>
+                    app:tint="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -505,7 +504,7 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_notes"
+                        android:src="@drawable/ic_logout"
                         app:tint="#D32F2F"/>
 
                     <TextView

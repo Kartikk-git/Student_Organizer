@@ -1,23 +1,28 @@
 package com.example.studentorganizer.adapter
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.studentorganizer.fragments.AssignmentFragment
+import com.example.studentorganizer.fragments.CalendarFragment
+import com.example.studentorganizer.fragments.CourseFragment
+import com.example.studentorganizer.fragments.HomeFragment
+import com.example.studentorganizer.fragments.NotesFragment
+import com.example.studentorganizer.fragments.ProfileFragment
 
-class ViewPagerAdapter(supportFragmentManager: FragmentManager) :
-    FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    private val fragmentList = ArrayList<Fragment>()
-    private val fragmentTitleList = ArrayList<String>()
+    override fun getItemCount(): Int = 6
 
-    override fun getItem(position: Int): Fragment = fragmentList[position]
-
-    override fun getPageTitle(position: Int): CharSequence = fragmentTitleList[position]
-
-    override fun getCount(): Int = fragmentList.size
-
-    fun addFragment(fragment: Fragment, title: String) {
-        fragmentList.add(fragment)
-        fragmentTitleList.add(title)
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> HomeFragment()
+            1 -> CourseFragment()
+            2 -> NotesFragment()
+            3 -> CalendarFragment()
+            4 -> AssignmentFragment()
+            5 -> ProfileFragment()
+            else -> HomeFragment()
+        }
     }
 }
