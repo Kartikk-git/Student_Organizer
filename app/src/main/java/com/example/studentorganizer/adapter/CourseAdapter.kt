@@ -12,7 +12,9 @@ import com.example.studentorganizer.database.entity.Course
 import com.google.android.material.button.MaterialButtonToggleGroup
 
 class CourseAdapter(
-    private val courseList: MutableList<Course>
+    private val courseList: MutableList<Course>,
+    var onItemClick: ((Course) -> Unit)? = null,
+    var onItemLongClick: ((Course) -> Unit)? = null
 ) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
 
     class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -36,6 +38,14 @@ class CourseAdapter(
         holder.tvCourseName.text = course.name
         holder.tvProgress.text = "${course.progress}%"
         holder.progressBar.progress = course.progress
+
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(course)
+        }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick?.invoke(course)
+            true
+        }
 
         holder.toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {

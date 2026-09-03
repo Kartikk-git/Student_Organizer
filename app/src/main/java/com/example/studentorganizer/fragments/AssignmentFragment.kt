@@ -59,9 +59,9 @@ class AssignmentFragment : Fragment() {
                     if (_binding != null) {
                         loadAssignments()
                     }
-                    context?.let {
-                        Toast.makeText(it, "Marked as $newStatus", Toast.LENGTH_SHORT).show()
-                    }
+//                    context?.let {
+//                        Toast.makeText(it, "Marked as $newStatus", Toast.LENGTH_SHORT).show()
+//                    }
                 }
             },
             onDelete = { assignment ->

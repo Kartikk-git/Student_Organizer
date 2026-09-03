@@ -4,37 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.example.studentorganizer.databinding.FragmentCalendarBinding
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.example.studentorganizer.compose.calendar.CalendarScreen
+import com.example.studentorganizer.database.AppDatabase
+import com.example.studentorganizer.ui.theme.StudentOrganizerTheme
 
 class CalendarFragment : Fragment() {
-
-    private var _binding: FragmentCalendarBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val database = AppDatabase.getDatabase(requireContext().applicationContext)
 
-        _binding = FragmentCalendarBinding.inflate(inflater, container, false)
-
-        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-
-            val selectedDate = "$dayOfMonth/${month + 1}/$year"
-
-            binding.tvSelectedDate.text = "Schedule for $selectedDate"
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                StudentOrganizerTheme {
+                    CalendarScreen(
+                        database = database
+                    )
+                }
+            }
         }
-
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

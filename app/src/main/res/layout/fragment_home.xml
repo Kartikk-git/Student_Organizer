@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".fragments.HomeFragment">
 
     <LinearLayout
@@ -33,7 +34,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_up_arrow"
+                    android:src="@drawable/ic_up_arrow"
                     app:tint="@color/black"
                     android:layout_marginTop="30dp"/>
 
@@ -72,7 +73,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_report"
+                    android:src="@drawable/ic_report"
                     app:tint="@color/black"
                     android:layout_marginTop="30dp"/>
 
@@ -111,7 +112,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/ic_calendar_"
+                    android:src="@drawable/ic_calendar_"
                     app:tint="@color/black"
                     android:layout_marginTop="30dp"/>
 

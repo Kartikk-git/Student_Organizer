@@ -35,7 +35,8 @@
                         android:id="@+id/imgProfile"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:background="@drawable/ic_account_box"
+                        android:src="@drawable/ic_account_box"
+                        app:tint="@color/white"
                         android:padding="18dp"/>
 
                     <LinearLayout
@@ -200,7 +201,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_id_card"
+                    android:src="@drawable/ic_id_card"
                     android:padding="9dp"
                     app:tint="@color/black"/>
 
@@ -241,7 +242,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_report"
+                    android:src="@drawable/ic_report"
                     android:padding="9dp"
                     app:tint="@color/black"/>
 
@@ -281,7 +282,7 @@
                 <ImageView
                     android:layout_width="17dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_rupee"
+                    android:src="@drawable/ic_rupee"
                     android:padding="9dp"
                     app:tint="@color/black" />
 
