@@ -53,11 +53,12 @@
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
-        android:backgroundTint="@color/black"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/black"
+        android:text="Next"
+        android:textColor="@color/white" />
 
     <Button
         android:id="@+id/btnGetStarted"
@@ -65,9 +66,10 @@
         android:layout_height="wrap_content"
         android:text="Get Started"
         android:backgroundTint="@color/black"
+        android:textColor="@color/white"
         android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"/>
+        android:layout_margin="20dp"/>
 
 </RelativeLayout>

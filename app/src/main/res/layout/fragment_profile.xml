@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@android:color/white">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="18dp"
             app:cardElevation="6dp"
-            app:cardBackgroundColor="@color/cardview_dark_background">
+            app:cardBackgroundColor="@color/black">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,10 +33,11 @@
 
                     <ImageView
                         android:id="@+id/imgProfile"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:background="@drawable/ic_profile"
-                        android:padding="18dp" />
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:src="@drawable/ic_account_box"
+                        app:tint="@color/white"
+                        android:padding="18dp"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -51,7 +51,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Name"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -61,7 +61,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="email"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/white"
+                            android:alpha="0.7"
                             android:textSize="14sp"/>
 
                         <TextView
@@ -70,7 +71,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Roll No :"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/white"
+                            android:alpha="0.7"
                             android:textSize="14sp"/>
 
                     </LinearLayout>
@@ -81,7 +83,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginTop="18dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@color/gray_light"
+                    android:alpha="0.2"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -99,7 +102,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Semester"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/white"
+                            android:alpha="0.7"
                             android:textSize="14sp"/>
 
                         <TextView
@@ -108,7 +112,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="5th"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -124,7 +128,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="CGPA"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/white"
+                            android:alpha="0.7"
                             android:textSize="14sp"/>
 
                         <TextView
@@ -133,7 +138,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="8.7"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -149,7 +154,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Attendance"
-                            android:textColor="@android:color/darker_gray"
+                            android:textColor="@color/white"
+                            android:alpha="0.7"
                             android:textSize="14sp"/>
 
                         <TextView
@@ -158,7 +164,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="87%"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold"/>
 
@@ -174,49 +180,9 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="10dp"
             android:text="Quick Access"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"/>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="15dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="3dp"
-            android:padding="5dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/ic_report"
-                    android:padding="9dp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_weight="1"
-                    android:text="Student ID Card"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"/>
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:src="@drawable/ic_arrow_forward"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -235,8 +201,54 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_report"
-                    android:padding="9dp" />
+                    android:src="@drawable/ic_id_card"
+                    android:padding="9dp"
+                    app:tint="@color/black"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="Student ID Card"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"/>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/gray_dark"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardAttendanceReport"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_report"
+                    android:padding="9dp"
+                    app:tint="@color/black"/>
 
                 <TextView
                     android:layout_width="0dp"
@@ -244,13 +256,14 @@
                     android:layout_marginStart="14dp"
                     android:layout_weight="1"
                     android:text="Attendance Report"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/black"
                     android:textSize="14sp"/>
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_arrow_forward"/>
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/gray_dark"/>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -260,7 +273,8 @@
             android:layout_height="48dp"
             android:layout_marginBottom="18dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="3dp">
+            app:cardElevation="3dp"
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -270,10 +284,11 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageView
-                    android:layout_width="20dp"
+                    android:layout_width="17dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/ic_report"
-                    android:padding="9dp" />
+                    android:src="@drawable/ic_rupee"
+                    android:padding="9dp"
+                    app:tint="@color/black" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -281,13 +296,14 @@
                     android:layout_marginStart="14dp"
                     android:layout_weight="1"
                     android:text="Fee Statement"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/black"
                     android:textSize="14sp"/>
 
                 <ImageView
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:src="@drawable/ic_arrow_forward"/>
+                    android:src="@drawable/ic_arrow_forward"
+                    app:tint="@color/gray_dark"/>
 
             </LinearLayout>
 
@@ -297,7 +313,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:text="Academic Progress"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -324,7 +340,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Credits Completed"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_medium"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
 
@@ -333,7 +349,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="102 / 160"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_medium"
                         android:textStyle="bold"/>
 
                 </LinearLayout>
@@ -360,7 +376,7 @@
                         android:layout_weight="1"
                         android:text="Semester Progress"
                         android:textSize="14sp"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_medium"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -368,7 +384,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="72%"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/gray_medium"
                         android:textStyle="bold"/>
 
                 </LinearLayout>
@@ -393,7 +409,7 @@
             android:layout_marginBottom="12dp"
             android:text="Settings"
             android:textSize="16sp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/black"
             android:textStyle="bold"/>
 
         <androidx.cardview.widget.CardView
@@ -419,7 +435,8 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_notifications"/>
+                        android:src="@drawable/ic_notifications"
+                        app:tint="@color/black"/>
 
                     <TextView
                         android:layout_width="0dp"
@@ -427,20 +444,22 @@
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
                         android:text="Notifications"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/black"
                         android:textSize="16sp"/>
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_arrow_forward"/>
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray_medium"/>
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="?android:attr/dividerVertical"
+                    android:alpha="0.2"/>
 
                 <LinearLayout
                     android:id="@+id/layoutSettings"
@@ -453,28 +472,31 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_notes"/>
+                        android:src="@drawable/ic_notes"
+                        app:tint="@color/black"/>
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_weight="1"
-                        android:textColor="@android:color/darker_gray"
+                        android:textColor="@color/black"
                         android:text="App Settings"
                         android:textSize="16sp"/>
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_arrow_forward"/>
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="@color/gray_medium"/>
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="?android:attr/dividerVertical"
+                    android:alpha="0.2"/>
 
                 <LinearLayout
                     android:id="@+id/layoutLogout"
@@ -487,7 +509,8 @@
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        android:src="@drawable/ic_notes" />
+                        android:src="@drawable/ic_logout"
+                        app:tint="#D32F2F"/>
 
                     <TextView
                         android:layout_width="0dp"
@@ -502,7 +525,8 @@
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:src="@drawable/ic_arrow_forward"/>
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#D32F2F"/>
 
                 </LinearLayout>
 
@@ -515,7 +539,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
             android:text="Student Organizer v1.0"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/gray_medium"
             android:textSize="14sp"/>
     </LinearLayout>
 </ScrollView>

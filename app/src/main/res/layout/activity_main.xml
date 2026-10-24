@@ -9,18 +9,22 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black">
+        android:background="@color/black"
+        android:paddingTop="28dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:paddingHorizontal="6dp"
+            android:paddingBottom="6dp">
             <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/ic_student_cap"
-                android:padding="10dp"
-                android:layout_margin="10dp"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_student_cap"
+                android:padding="8dp"
+                android:layout_margin="8dp"
+                app:tint="@color/white"/>
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -34,44 +38,46 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:padding="5dp"/>
+                    android:paddingHorizontal="4dp"
+                    android:paddingTop="4dp"/>
                 <TextView
                     android:id="@+id/tv_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Name"
-                    android:textSize="16sp"
-                    android:textColor="@color/white"
-                    android:paddingHorizontal="5dp"/>
+                    android:text="Student"
+                    android:textSize="15sp"
+                    android:textColor="@color/gray_light"
+                    android:paddingHorizontal="4dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="4dp">
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="Semester"
-                        android:textColor="@color/white"
-                        android:paddingHorizontal="5dp"
-                        android:paddingBottom="10dp"
-                        android:textSize="14sp"/>
+                        android:textColor="@color/gray_light"
+                        android:paddingHorizontal="4dp"
+                        android:textSize="13sp"/>
                     <TextView
                         android:id="@+id/tv_semester_number"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="5"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textColor="@color/gray_light"
+                        android:textSize="13sp" />
                     <TextView
                         android:id="@+id/tv_semester_year"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="2024-25"
-                        android:textColor="@color/white"
-                        android:textSize="14sp"
-                        android:paddingHorizontal="5dp"/>
+                        android:layout_height="wrap_content"
+                        android:text="• 2024-25"
+                        android:textColor="@color/gray_light"
+                        android:textSize="13sp"
+                        android:paddingHorizontal="4dp"/>
 
                 </LinearLayout>
 
@@ -82,6 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
                 app:contentInsetStart="0dp"
                 app:contentInsetLeft="0dp"
                 app:title="" />
@@ -89,7 +97,7 @@
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/tab_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -101,9 +109,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        android:background="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/gray_dark"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

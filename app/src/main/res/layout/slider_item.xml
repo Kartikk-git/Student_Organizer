@@ -4,14 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/idRLSlider"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
-    <!--text view for displaying our heading-->
-
-    <!--Image view for displaying our slider image-->
-
-    <!--text view for displaying our slider description-->
 
     <TextView
         android:id="@+id/idTVSliderTitle"
@@ -34,15 +28,14 @@
 
     <ImageView
         android:id="@+id/idIVSlider"
-        android:layout_width="314dp"
-        android:layout_height="301dp"
+        android:layout_width="359dp"
+        android:layout_height="406dp"
         android:src="@drawable/img"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.316" />
 
     <TextView
         android:id="@+id/idTVSliderDescription"
@@ -56,7 +49,7 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.723"
-        tools:layout_editor_absoluteX="181dp" />
+        app:layout_constraintVertical_bias="0.691"
+        tools:layout_editor_absoluteX="0dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

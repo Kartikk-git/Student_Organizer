@@ -36,61 +36,51 @@ class OnboardingActivity : AppCompatActivity() {
         dot3 = findViewById(R.id.dot3)
 
         val list = arrayListOf(
-
             OnboardingItem(
                 R.drawable.img,
                 "Welcome to Student Organizer",
                 "Manage your classes, assignments, attendance, and academic tasks all in one place."
             ),
-
             OnboardingItem(
                 R.drawable.img,
                 "Stay Organized",
                 "Keep track of your timetable, deadlines, and upcoming exams with ease."
             ),
-
             OnboardingItem(
                 R.drawable.img,
                 "Ready to Get Started?",
                 "Create your account and take control of your academic journey today."
             )
-
         )
 
         viewPager.adapter = OnboardingAdapter(list)
 
         btnNext.setOnClickListener {
-
             if (viewPager.currentItem < list.size - 1) {
                 viewPager.currentItem += 1
             }
-
         }
 
         btnGetStarted.setOnClickListener {
+            val sharedPref = getSharedPreferences("Details", MODE_PRIVATE)
+            sharedPref.edit().putBoolean("isFirstTime", false).apply()
+
             startActivity(Intent(this, RegisterActivity::class.java))
             finish()
-
         }
 
         viewPager.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
-
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-
                     updateDots(position)
 
                     if (position == list.size - 1) {
-
                         btnNext.visibility = View.GONE
                         btnGetStarted.visibility = View.VISIBLE
-
                     } else {
-
                         btnNext.visibility = View.VISIBLE
                         btnGetStarted.visibility = View.GONE
-
                     }
                 }
             }
@@ -98,18 +88,14 @@ class OnboardingActivity : AppCompatActivity() {
     }
 
     private fun updateDots(position: Int) {
-
-        dot1.setTextColor(ContextCompat.getColor(this, R.color.black))
-        dot2.setTextColor(ContextCompat.getColor(this, R.color.black))
-        dot3.setTextColor(ContextCompat.getColor(this, R.color.black))
+        dot3.setTextColor(ContextCompat.getColor(this, R.color.gray_medium))
+        dot1.setTextColor(ContextCompat.getColor(this, R.color.gray_medium))
+        dot2.setTextColor(ContextCompat.getColor(this, R.color.gray_medium))
 
         when (position) {
-
-            0 -> dot1.setTextColor(ContextCompat.getColor(this, R.color.gray))
-
-            1 -> dot2.setTextColor(ContextCompat.getColor(this, R.color.gray))
-
-            2 -> dot3.setTextColor(ContextCompat.getColor(this, R.color.gray))
+            0 -> dot1.setTextColor(ContextCompat.getColor(this, R.color.black))
+            1 -> dot2.setTextColor(ContextCompat.getColor(this, R.color.black))
+            2 -> dot3.setTextColor(ContextCompat.getColor(this, R.color.black))
         }
     }
 }
