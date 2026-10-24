@@ -16,6 +16,43 @@ An all-in-one Android application designed to help students manage courses, trac
 
 ---
 
+## 📌 Problem Statement
+
+### **Title**: *Fragmented Academic Task and Attendance Management for Higher Education Students*
+
+### **The Challenge**:
+College and university students consistently struggle with academic fragmentation and time management. Modern academic life requires managing multiple courses, assignment deadlines, exam dates, study materials, and minimum attendance requirements across separate tools.
+
+### **Key Pain Points**:
+1. **App Switching & Cognitive Overload**: Students rely on 4–5 separate applications (a generic calendar, a task manager, a note-taking app, an attendance counter, and photo galleries for lecture notes), leading to clutter and missed deadlines.
+2. **Attendance Risk Ignorance**: Most academic institutions enforce a strict attendance threshold (e.g., 75%). Generic calendar apps do not compute attendance percentages or warn students before they fall into a critical attendance shortage.
+3. **Disorganized Study Materials**: Notes and assignment tasks are rarely categorized by specific courses, making exam preparation inefficient.
+4. **Dependence on Network Connectivity**: Many student planner apps depend heavily on server connections or cloud sync, causing sluggish performance or unavailability in offline classrooms/libraries.
+
+---
+
+## ✨ Unique Selling Propositions (USP)
+
+#### 🟢 **1. Gesture-Driven Attendance Logger & Smart Risk Calculator**
+* Instead of manual counter buttons, the app features an interactive Jetpack Compose calendar where students can use multi-tap gestures (**Tap / Double-tap / Triple-tap**) directly on dates to mark attendance (**Present 🟢** vs **Absent 🔴**).
+* Automatically calculates real-time overall attendance percentages and alerts students if their attendance drops below safety thresholds (e.g., < 75%).
+
+#### 🔗 **2. Dynamic Contextual Course Linking**
+* Every component in the app is interconnected:
+  * Viewing a course shows its **live assignment progress bar** (e.g., 3/5 completed).
+  * Tapping *"View Study Materials"* on a course automatically filters and opens all study notes tagged with that course code.
+
+#### ⚡ **3. Hybrid Architecture (Native Views + Jetpack Compose M3)**
+* Bridges modern Jetpack Compose Material 3 sheets/dialogs with high-performance ViewPager2 tab navigation. This offers fluid 60fps swipe navigation across tabs while keeping dialog interactions modern, animated, and responsive.
+
+#### 🔒 **4. 100% Local & Offline-First Privacy**
+* Built entirely on **Room ORM (SQLite)** with **KSP**. Student data (grades, notes, attendance, schedule) remains strictly on the device—no forced cloud logins, zero tracking, and instant sub-millisecond response times even without an internet connection.
+
+#### 🎯 **5. Priority-Based Task & Progress Tracking**
+* Assignments are classified not only by status (*Pending, In Progress, Completed*) but also by visual priority (*High, Medium, Low*), letting students instantly identify urgent coursework.
+
+---
+
 ## ✨ Key Features
 
 ### 📊 1. Dashboard & Quick Overview
@@ -128,12 +165,12 @@ StudentOrganizer/
 ### Building & Running
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/StudentOrganizer.git
-   cd StudentOrganizer
+   git clone https://github.com/Kartikk-git/Student_Organizer.git
+   cd Student_Organizer
    ```
 2. **Open in Android Studio**:
    - Launch Android Studio and choose **Open an Existing Project**.
-   - Select the `StudentOrganizer` root directory.
+   - Select the `Student_Organizer` root directory.
 3. **Gradle Sync**:
    - Allow Android Studio to sync Gradle dependencies (defined in `gradle/libs.versions.toml`).
 4. **Run Application**:
