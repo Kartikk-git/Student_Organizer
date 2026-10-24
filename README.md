@@ -49,7 +49,7 @@ College and university students consistently struggle with academic fragmentatio
 * Built entirely on **Room ORM (SQLite)** with **KSP**. Student data (grades, notes, attendance, schedule) remains strictly on the device—no forced cloud logins, zero tracking, and instant sub-millisecond response times even without an internet connection.
 
 #### 🎯 **5. Priority-Based Task & Progress Tracking**
-* Assignments are classified not only by status (*Pending, In Progress, Completed*) but also by visual priority (*High, Medium, Low*), letting students instantly identify urgent coursework.
+* Assignments are classified not only by status (*Pending, In Progress, Completed*) but also by visual priority (*High*, *Medium*, *Low*), letting students instantly identify urgent coursework.
 
 ---
 
@@ -188,6 +188,27 @@ StudentOrganizer/
 | Assignments | Calendar & Attendance | Smart Notes |
 | :-: | :-: | :-: |
 | *Task & Priority Manager* | *Interactive Compose Calendar* | *Notes Directory* |
+
+---
+
+## 🔮 Future Roadmap & Scope
+
+To evolve **Student Organizer** into a comprehensive, enterprise-grade campus ecosystem, the following features are planned for upcoming releases:
+
+### 👑 1. Institutional Admin Portal & Control Hub
+* **Role-Based Access Control (RBAC)**: Distinct permissions for **Administrators/Faculty** and **Students**.
+* **Centralized Content Control**: Admins can publish course schedules, assign coursework, track class-wide attendance, and announce institute events.
+* **Student Data Management**: Upload student records, enrollments, and academic transcripts via CSV/Excel or REST APIs.
+* **Interactive Course Progress Analytics**: Students can view official course completion progress published directly by professors.
+
+### 💳 2. Digital Document & Pass Generator
+* **Digital Student ID Card**: Generate secure, scannable digital student IDs with embedded QR codes.
+* **Campus Bus & Transit Pass**: Integrated digital bus/transport pass generation and verification.
+* **Fee Statements & Receipts**: View, download, and track tuition fee structures, payment status, and official receipts.
+
+### 🔔 3. Real-Time Cloud Sync & Notifications
+* **Push Notifications**: Firebase Cloud Messaging (FCM) integration for urgent event updates, assignment due dates, and attendance warnings.
+* **Cross-Device Backup**: Secure cloud database synchronization allowing students to restore data across devices.
 
 ---
 
