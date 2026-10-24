@@ -1,7 +1,9 @@
 package com.example.studentorganizer.adapter
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.studentorganizer.database.entity.Assignment
@@ -9,11 +11,13 @@ import com.example.studentorganizer.databinding.ItemAssignmentBinding
 
 class AssignmentAdapter(
     private val assignments: MutableList<Assignment>,
-    private val onStatusToggle: (Assignment) -> Unit,
-    private val onDelete: (Assignment) -> Unit
+    var onItemClick: ((Assignment) -> Unit)? = null,
+    var onMoreOptionsClick: ((Assignment, View) -> Unit)? = null,
+    var onStatusToggle: ((Assignment) -> Unit)? = null,
+    var onItemLongClick: ((Assignment) -> Unit)? = null
 ) : RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder>() {
 
-    inner class AssignmentViewHolder(
+    class AssignmentViewHolder(
         val binding: ItemAssignmentBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
@@ -38,21 +42,35 @@ class AssignmentAdapter(
         holder.binding.tvAssignmentName.text = assignment.title
         holder.binding.tvAssignmentSubject.text = assignment.subject
         holder.binding.tvAssignmentDue.text = "Due: ${assignment.dueDate}"
-        holder.binding.tvAssignmentStatus.text = assignment.status
 
-        if (assignment.status.equals("Completed", ignoreCase = true)) {
-            holder.binding.tvAssignmentStatus.setTextColor(Color.parseColor("#2E7D32")) // Green
+        val isCompleted = assignment.status.equals("Completed", ignoreCase = true)
+        if (isCompleted) {
+            holder.binding.tvAssignmentStatus.text = "✓ Completed"
+            holder.binding.tvAssignmentStatus.setTextColor(Color.parseColor("#2E7D32"))
+            holder.binding.tvAssignmentStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E8F5E9"))
+            holder.binding.btnToggleStatus.text = "Mark Pending"
         } else {
-            holder.binding.tvAssignmentStatus.setTextColor(Color.parseColor("#D84315")) // Orange-Red
+            holder.binding.tvAssignmentStatus.text = "⏳ Pending"
+            holder.binding.tvAssignmentStatus.setTextColor(Color.parseColor("#E65100"))
+            holder.binding.tvAssignmentStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFF3E0"))
+            holder.binding.btnToggleStatus.text = "Mark Done"
         }
 
         holder.itemView.setOnClickListener {
-            onStatusToggle(assignment)
+            onItemClick?.invoke(assignment)
         }
 
         holder.itemView.setOnLongClickListener {
-            onDelete(assignment)
+            onItemLongClick?.invoke(assignment)
             true
+        }
+
+        holder.binding.btnMoreOptions.setOnClickListener { v ->
+            onMoreOptionsClick?.invoke(assignment, v)
+        }
+
+        holder.binding.btnToggleStatus.setOnClickListener {
+            onStatusToggle?.invoke(assignment)
         }
     }
 

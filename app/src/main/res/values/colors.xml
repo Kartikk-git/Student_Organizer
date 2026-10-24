@@ -5,4 +5,7 @@
     <color name="gray_dark">#FF333333</color>
     <color name="gray_light">#FFCCCCCC</color>
     <color name="gray_medium">#FF888888</color>
+    <color name="gray_card_bg">#FFF8F9FA</color>
+    <color name="gray_border">#FFEAEAEA</color>
+    <color name="accent_dark">#FF1A1A1A</color>
 </resources>

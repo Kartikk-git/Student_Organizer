@@ -1,18 +1,20 @@
 package com.example.studentorganizer.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.studentorganizer.databinding.ItemNotesBinding
 import com.example.studentorganizer.database.entity.Notes
+import com.example.studentorganizer.databinding.ItemNotesBinding
 
 class NoteAdapter(
     private val notes: MutableList<Notes>,
-    private val onEdit: (Notes) -> Unit,
-    private val onDelete: (Notes) -> Unit
+    var onItemClick: ((Notes) -> Unit)? = null,
+    var onMoreOptionsClick: ((Notes, View) -> Unit)? = null,
+    var onItemLongClick: ((Notes) -> Unit)? = null
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
-    inner class NoteViewHolder(
+    class NoteViewHolder(
         val binding: ItemNotesBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
@@ -20,13 +22,11 @@ class NoteAdapter(
         parent: ViewGroup,
         viewType: Int
     ): NoteViewHolder {
-
         val binding = ItemNotesBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-
         return NoteViewHolder(binding)
     }
 
@@ -34,7 +34,6 @@ class NoteAdapter(
         holder: NoteViewHolder,
         position: Int
     ) {
-
         val note = notes[position]
 
         holder.binding.tvNoteTitle.text = note.title
@@ -43,12 +42,16 @@ class NoteAdapter(
         holder.binding.tvNoteDate.text = note.date
 
         holder.itemView.setOnClickListener {
-            onEdit(note)
+            onItemClick?.invoke(note)
         }
 
         holder.itemView.setOnLongClickListener {
-            onDelete(note)
+            onItemLongClick?.invoke(note)
             true
+        }
+
+        holder.binding.btnMoreOptions.setOnClickListener { v ->
+            onMoreOptionsClick?.invoke(note, v)
         }
     }
 

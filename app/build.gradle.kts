@@ -6,16 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.studentorganizer"
-    compileSdk {
-        version = release(37) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.studentorganizer"
         minSdk = 24
-        targetSdk = 37
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -60,10 +56,6 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     // Integration between Compose and Activity (setContent)
     implementation(libs.androidx.activity.compose)
-    // Lifecycle components for Compose (collectAsStateWithLifecycle)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    // ViewModel integration for Compose
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     // Tooling for debugging Compose UI (layout inspector)
     debugImplementation(libs.androidx.compose.ui.tooling)
@@ -79,15 +71,14 @@ dependencies {
     implementation(libs.material)
     
     // Core SplashScreen API for Android 12+ splash screen backwards compatibility
-    implementation("androidx.core:core-splashscreen:1.2.0")
+    implementation(libs.androidx.core.splashscreen)
     // ViewPager2 for swipeable page views
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation(libs.androidx.viewpager2)
 
     // Room Database: Local SQLite database ORM for data persistence
-    val room_version = "2.8.4"
-    implementation("androidx.room:room-runtime:$room_version") // Core Room library
-    implementation("androidx.room:room-ktx:$room_version") // Kotlin extensions and Coroutines support for Room
-    ksp("androidx.room:room-compiler:$room_version") // Annotation processor to generate database code
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     // Testing frameworks
     testImplementation(libs.junit) // Local unit tests

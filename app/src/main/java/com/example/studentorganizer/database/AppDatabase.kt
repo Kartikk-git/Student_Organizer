@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.studentorganizer.database.dao.AssignmentDao
+import com.example.studentorganizer.database.dao.AttendanceDao
 import com.example.studentorganizer.database.dao.CourseDao
 import com.example.studentorganizer.database.dao.NotesDao
 import com.example.studentorganizer.database.dao.UserDao
 import com.example.studentorganizer.database.entity.Assignment
+import com.example.studentorganizer.database.entity.AttendanceRecord
 import com.example.studentorganizer.database.entity.Course
 import com.example.studentorganizer.database.entity.Notes
 import com.example.studentorganizer.database.entity.User
@@ -18,9 +20,10 @@ import com.example.studentorganizer.database.entity.User
         User::class,
         Notes::class,
         Course::class,
-        Assignment::class
+        Assignment::class,
+        AttendanceRecord::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -29,6 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun notesDao(): NotesDao
     abstract fun courseDao(): CourseDao
     abstract fun assignmentDao(): AssignmentDao
+    abstract fun attendanceDao(): AttendanceDao
 
     companion object {
 

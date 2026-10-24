@@ -206,3 +206,55 @@ fun EmptyScheduleCard(
         }
     }
 }
+
+// -----------------------------------------------------------------------------
+// Compose Previews for Android Studio Design & Live Editing
+// -----------------------------------------------------------------------------
+
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true, name = "Schedule Item - Pending")
+@Composable
+fun ScheduleItemPendingPreview() {
+    StudentOrganizerTheme {
+        ScheduleItemCard(
+            assignment = Assignment(
+                id = 1,
+                title = "DBMS ER Diagram & Schema Design",
+                subject = "CS302",
+                dueDate = "15 Sep 2026",
+                status = "Pending"
+            ),
+            onStatusToggle = {},
+            onLongClick = {}
+        )
+    }
+}
+
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true, name = "Schedule Item - Completed")
+@Composable
+fun ScheduleItemCompletedPreview() {
+    StudentOrganizerTheme {
+        ScheduleItemCard(
+            assignment = Assignment(
+                id = 2,
+                title = "OS Process Scheduling Algorithm Notes",
+                subject = "CS303",
+                dueDate = "10 Sep 2026",
+                status = "Completed"
+            ),
+            onStatusToggle = {},
+            onLongClick = {}
+        )
+    }
+}
+
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true, name = "Empty Schedule Card")
+@Composable
+fun EmptyScheduleCardPreview() {
+    StudentOrganizerTheme {
+        EmptyScheduleCard(
+            selectedDate = "15 September 2026",
+            onAddClick = {}
+        )
+    }
+}
+

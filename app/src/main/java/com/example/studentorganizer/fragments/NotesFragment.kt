@@ -1,20 +1,25 @@
 package com.example.studentorganizer.fragments
 
-import android.app.AlertDialog
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.PopupMenu
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.studentorganizer.adapter.NoteAdapter
+import com.example.studentorganizer.compose.notes.NoteBottomSheetDialogFragment
+import com.example.studentorganizer.compose.notes.NoteDetailScreen
 import com.example.studentorganizer.database.AppDatabase
-import com.example.studentorganizer.databinding.FragmentNotesBinding
+import com.example.studentorganizer.database.entity.Course
 import com.example.studentorganizer.database.entity.Notes
+import com.example.studentorganizer.databinding.FragmentNotesBinding
+import com.example.studentorganizer.ui.theme.StudentOrganizerTheme
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,40 +33,68 @@ class NotesFragment : Fragment() {
     private lateinit var noteAdapter: NoteAdapter
     private lateinit var database: AppDatabase
 
-    private val notes = mutableListOf<Notes>()
+    private val notesList = mutableListOf<Notes>()
+    private val courseList = mutableListOf<Course>()
+
+    private var currentDetailNote: Notes? = null
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding = FragmentNotesBinding.inflate(
-            inflater,
-            container,
-            false
-        )
-
+        _binding = FragmentNotesBinding.inflate(inflater, container, false)
         database = AppDatabase.getDatabase(requireContext().applicationContext)
 
+        binding.composeViewDetail.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+        )
+
         setupRecyclerView()
-        loadNotes()
+        setupBackNavigation()
 
         binding.fabAddNote.setOnClickListener {
-            showAddNoteDialog()
+            showAddNoteBottomSheet()
         }
+
+        loadData()
 
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadData()
+    }
+
+    private fun setupBackNavigation() {
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val b = _binding
+                if (b != null && b.composeViewDetail.visibility == View.VISIBLE) {
+                    hideNoteDetails()
+                } else {
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback!!)
+    }
+
     private fun setupRecyclerView() {
         noteAdapter = NoteAdapter(
-            notes = notes,
-            onEdit = { note ->
-                showEditNoteDialog(note)
+            notes = notesList,
+            onItemClick = { note ->
+                showNoteDetails(note)
             },
-            onDelete = { note ->
-                deleteNote(note)
+            onMoreOptionsClick = { note, anchorView ->
+                showNoteOptionsMenu(note, anchorView)
+            },
+            onItemLongClick = { note ->
+                showDeleteNoteDialog(note)
             }
         )
 
@@ -69,175 +102,167 @@ class NotesFragment : Fragment() {
         binding.rvNotes.adapter = noteAdapter
     }
 
-    // READ
-    private fun loadNotes() {
+    private fun loadData() {
         viewLifecycleOwner.lifecycleScope.launch {
-            val allNotes = database.notesDao().getAllNotes()
+            val notes = database.notesDao().getAllNotes()
+            val courses = database.courseDao().getAllCourses()
+
             val b = _binding ?: return@launch
-            notes.clear()
-            notes.addAll(allNotes)
+
+            notesList.clear()
+            notesList.addAll(notes)
+
+            courseList.clear()
+            courseList.addAll(courses)
+
+            if (notes.isEmpty()) {
+                b.layoutEmptyNotes.visibility = View.VISIBLE
+                b.rvNotes.visibility = View.GONE
+            } else {
+                b.layoutEmptyNotes.visibility = View.GONE
+                b.rvNotes.visibility = View.VISIBLE
+            }
             noteAdapter.notifyDataSetChanged()
-        }
-    }
 
-    // CREATE
-    private fun showAddNoteDialog() {
-        val ctx = context ?: return
-        val titleInput = EditText(ctx).apply {
-            hint = "Note title"
-        }
-        val subjectInput = EditText(ctx).apply {
-            hint = "Subject"
-        }
-        val contentInput = EditText(ctx).apply {
-            hint = "Note content"
-            minLines = 4
-            gravity = Gravity.TOP
-        }
-
-        val layout = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(40, 20, 40, 10)
-            addView(titleInput)
-            addView(subjectInput)
-            addView(contentInput)
-        }
-
-        val dialog = AlertDialog.Builder(ctx)
-            .setTitle("Add Note")
-            .setView(layout)
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Add", null)
-            .create()
-
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val title = titleInput.text.toString().trim()
-                val subject = subjectInput.text.toString().trim()
-                val content = contentInput.text.toString().trim()
-
-                if (title.isEmpty()) {
-                    titleInput.error = "Enter title"
-                    return@setOnClickListener
+            // If detail screen is open, re-render it
+            currentDetailNote?.let { current ->
+                val updatedNote = notes.firstOrNull { it.id == current.id }
+                if (updatedNote != null) {
+                    currentDetailNote = updatedNote
+                    renderNoteDetailScreen(updatedNote)
+                } else {
+                    hideNoteDetails()
                 }
-                if (subject.isEmpty()) {
-                    subjectInput.error = "Enter subject"
-                    return@setOnClickListener
-                }
-                if (content.isEmpty()) {
-                    contentInput.error = "Enter content"
-                    return@setOnClickListener
-                }
-
-                val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date())
-                val note = Notes(
-                    title = title,
-                    subject = subject,
-                    content = content,
-                    date = date
-                )
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    database.notesDao().insertNote(note)
-                    if (_binding != null) {
-                        loadNotes()
-                    }
-                }
-
-                dialog.dismiss()
             }
         }
-
-        dialog.show()
     }
 
-    // UPDATE
-    private fun showEditNoteDialog(note: Notes) {
-        val ctx = context ?: return
-        val titleInput = EditText(ctx).apply {
-            setText(note.title)
-            hint = "Note title"
-        }
-        val subjectInput = EditText(ctx).apply {
-            setText(note.subject)
-            hint = "Subject"
-        }
-        val contentInput = EditText(ctx).apply {
-            setText(note.content)
-            hint = "Note content"
-            minLines = 4
-            gravity = Gravity.TOP
-        }
+    private fun showNoteOptionsMenu(note: Notes, anchorView: View) {
+        val popup = PopupMenu(requireContext(), anchorView)
+        popup.menu.add(0, 1, 0, "View Details")
+        popup.menu.add(0, 2, 1, "Update Note")
+        popup.menu.add(0, 3, 2, "Delete Note")
 
-        val layout = LinearLayout(ctx).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(40, 20, 40, 10)
-            addView(titleInput)
-            addView(subjectInput)
-            addView(contentInput)
-        }
-
-        val dialog = AlertDialog.Builder(ctx)
-            .setTitle("Edit Note")
-            .setView(layout)
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Update", null)
-            .create()
-
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                val title = titleInput.text.toString().trim()
-                val subject = subjectInput.text.toString().trim()
-                val content = contentInput.text.toString().trim()
-
-                if (title.isEmpty()) {
-                    titleInput.error = "Enter title"
-                    return@setOnClickListener
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> {
+                    showNoteDetails(note)
+                    true
                 }
-                if (subject.isEmpty()) {
-                    subjectInput.error = "Enter subject"
-                    return@setOnClickListener
+                2 -> {
+                    showEditNoteBottomSheet(note)
+                    true
                 }
-                if (content.isEmpty()) {
-                    contentInput.error = "Enter content"
-                    return@setOnClickListener
+                3 -> {
+                    showDeleteNoteDialog(note)
+                    true
                 }
-
-                val updatedNote = Notes(
-                    id = note.id,
-                    title = title,
-                    subject = subject,
-                    content = content,
-                    date = note.date
-                )
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    database.notesDao().updateNote(updatedNote)
-                    if (_binding != null) {
-                        loadNotes()
-                    }
-                }
-
-                dialog.dismiss()
+                else -> false
             }
         }
-
-        dialog.show()
+        popup.show()
     }
 
-    // DELETE
-    private fun deleteNote(note: Notes) {
+    private fun showNoteDetails(note: Notes) {
+        currentDetailNote = note
+        val b = _binding ?: return
+        b.composeViewDetail.visibility = View.VISIBLE
+        renderNoteDetailScreen(note)
+    }
+
+    private fun hideNoteDetails() {
+        currentDetailNote = null
+        val b = _binding ?: return
+        b.composeViewDetail.visibility = View.GONE
+        loadData()
+    }
+
+    private fun renderNoteDetailScreen(note: Notes) {
+        val b = _binding ?: return
+        b.composeViewDetail.setContent {
+            StudentOrganizerTheme {
+                NoteDetailScreen(
+                    note = note,
+                    onBackClick = {
+                        hideNoteDetails()
+                    },
+                    onEditNote = { n ->
+                        showEditNoteBottomSheet(n)
+                    },
+                    onDeleteNote = { n ->
+                        showDeleteNoteDialog(n) {
+                            hideNoteDetails()
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    private fun showAddNoteBottomSheet() {
+        val bottomSheet = NoteBottomSheetDialogFragment.newInstance(
+            note = null,
+            courses = courseList
+        ) { title, subject, content ->
+            val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date())
+            val newNote = Notes(
+                title = title,
+                subject = subject,
+                content = content,
+                date = date
+            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                database.notesDao().insertNote(newNote)
+                if (_binding != null) {
+                    loadData()
+                }
+                context?.let {
+                    Toast.makeText(it, "Note added for $subject!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        bottomSheet.show(parentFragmentManager, "NoteBottomSheet")
+    }
+
+    private fun showEditNoteBottomSheet(note: Notes) {
+        val bottomSheet = NoteBottomSheetDialogFragment.newInstance(
+            note = note,
+            courses = courseList
+        ) { title, subject, content ->
+            val updatedNote = Notes(
+                id = note.id,
+                title = title,
+                subject = subject,
+                content = content,
+                date = note.date
+            )
+            viewLifecycleOwner.lifecycleScope.launch {
+                database.notesDao().updateNote(updatedNote)
+                if (_binding != null) {
+                    loadData()
+                }
+                context?.let {
+                    Toast.makeText(it, "Note updated!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        bottomSheet.show(parentFragmentManager, "NoteBottomSheet")
+    }
+
+    private fun showDeleteNoteDialog(note: Notes, onDeleted: (() -> Unit)? = null) {
         val ctx = context ?: return
-        AlertDialog.Builder(ctx)
+        MaterialAlertDialogBuilder(ctx)
             .setTitle("Delete Note")
-            .setMessage("Are you sure you want to delete '${note.title}'?")
+            .setMessage("Are you sure you want to delete '${note.title}' for ${note.subject}?")
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Delete") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
                     database.notesDao().deleteNote(note)
                     if (_binding != null) {
-                        loadNotes()
+                        loadData()
                     }
+                    onDeleted?.invoke()
+                    Toast.makeText(ctx, "Deleted note '${note.title}'", Toast.LENGTH_SHORT).show()
                 }
             }
             .show()
@@ -245,6 +270,8 @@ class NotesFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        backPressedCallback?.remove()
+        backPressedCallback = null
         _binding = null
     }
 }

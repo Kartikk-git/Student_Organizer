@@ -1,5 +1,6 @@
 package com.example.studentorganizer.compose.calendar
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,16 +12,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.studentorganizer.database.AppDatabase
 import com.example.studentorganizer.database.entity.Assignment
+import com.example.studentorganizer.database.entity.AttendanceRecord
+import com.example.studentorganizer.database.entity.Course
 import com.example.studentorganizer.ui.theme.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.platform.LocalLocale
 
 @Composable
 fun CalendarScreen(
@@ -28,26 +33,131 @@ fun CalendarScreen(
     modifier: Modifier = Modifier
 ) {
     val coroutineScope = rememberCoroutineScope()
+    LocalContext.current
     var assignments by remember { mutableStateOf<List<Assignment>>(emptyList()) }
+    var attendanceRecords by remember { mutableStateOf<List<AttendanceRecord>>(emptyList()) }
+    var availableCourses by remember { mutableStateOf<List<Course>>(emptyList()) }
+
+    fun refreshData() {
+        coroutineScope.launch {
+            val assignmentList = withContext(Dispatchers.IO) {
+                database.assignmentDao().getAllAssignments()
+            }
+            val attendanceList = withContext(Dispatchers.IO) {
+                database.attendanceDao().getAllAttendanceRecords()
+            }
+            val courseList = withContext(Dispatchers.IO) {
+                database.courseDao().getAllCourses()
+            }
+            assignments = assignmentList
+            attendanceRecords = attendanceList
+            availableCourses = courseList
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        refreshData()
+    }
+
+    val attendanceMap = remember(attendanceRecords) {
+        attendanceRecords.associate { normalizeDateString(it.dateString) to it.status }
+    }
+
+    CalendarScreenContent(
+        assignments = assignments,
+        attendanceMap = attendanceMap,
+        availableCourses = availableCourses,
+        modifier = modifier,
+        onToggleAssignmentStatus = { assignment ->
+            val newStatus = if (assignment.status.equals("Completed", ignoreCase = true)) "Pending" else "Completed"
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.assignmentDao().updateAssignment(assignment.copy(status = newStatus))
+                }
+                refreshData()
+            }
+        },
+        onDeleteAssignment = { assignment ->
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.assignmentDao().deleteAssignment(assignment)
+                }
+                refreshData()
+            }
+        },
+        onAddAssignment = { title, subject, dueDate ->
+            coroutineScope.launch {
+                val newAssignment = Assignment(
+                    title = title,
+                    subject = subject,
+                    dueDate = dueDate,
+                    status = "Pending"
+                )
+                withContext(Dispatchers.IO) {
+                    database.assignmentDao().insertAssignment(newAssignment)
+                }
+                refreshData()
+            }
+        },
+        onMarkPresent = { day ->
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.attendanceDao().insertOrUpdateAttendance(
+                        AttendanceRecord(
+                            dateString = day.dateString,
+                            status = "PRESENT"
+                        )
+                    )
+                }
+                refreshData()
+//                Toast.makeText(context, "🟢 Marked Present for ${day.dayNumber} ${day.dateString.split(" ").getOrNull(1) ?: ""}", Toast.LENGTH_SHORT).show()
+            }
+        },
+        onMarkAbsent = { day ->
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.attendanceDao().insertOrUpdateAttendance(
+                        AttendanceRecord(
+                            dateString = day.dateString,
+                            status = "ABSENT"
+                        )
+                    )
+                }
+                refreshData()
+//                Toast.makeText(context, "🔴 Marked Absent for ${day.dayNumber} ${day.dateString.split(" ").getOrNull(1) ?: ""}", Toast.LENGTH_SHORT).show()
+            }
+        },
+        onClearAttendance = { day ->
+            coroutineScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.attendanceDao().deleteAttendanceByDate(day.dateString)
+                }
+                refreshData()
+//                Toast.makeText(context, "⚪ Cleared attendance for ${day.dayNumber} ${day.dateString.split(" ").getOrNull(1) ?: ""}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+}
+
+@Composable
+fun CalendarScreenContent(
+    assignments: List<Assignment>,
+    attendanceMap: Map<String, String> = emptyMap(),
+    availableCourses: List<Course> = emptyList(),
+    modifier: Modifier = Modifier,
+    onToggleAssignmentStatus: (Assignment) -> Unit = {},
+    onDeleteAssignment: (Assignment) -> Unit = {},
+    onAddAssignment: (title: String, subject: String, dueDate: String) -> Unit = { _, _, _ -> },
+    onMarkPresent: (DayModel) -> Unit = {},
+    onMarkAbsent: (DayModel) -> Unit = {},
+    onClearAttendance: (DayModel) -> Unit = {}
+) {
     var showAddDialog by remember { mutableStateOf(false) }
     var assignmentToDelete by remember { mutableStateOf<Assignment?>(null) }
 
     val displayedCalendar = remember { mutableStateOf(Calendar.getInstance()) }
     val selectedDateCalendar = remember { mutableStateOf(Calendar.getInstance()) }
     val todayCalendar = remember { Calendar.getInstance() }
-
-    fun refreshAssignments() {
-        coroutineScope.launch {
-            val list = withContext(Dispatchers.IO) {
-                database.assignmentDao().getAllAssignments()
-            }
-            assignments = list
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        refreshAssignments()
-    }
 
     val currentYear = displayedCalendar.value.get(Calendar.YEAR)
     val currentMonth = displayedCalendar.value.get(Calendar.MONTH)
@@ -118,20 +228,21 @@ fun CalendarScreen(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Keep track of your schedule",
+                        text = "Keep track of your schedule and daily attendance",
                         style = MaterialTheme.typography.bodyMedium,
                         color = TextSecondary
                     )
                 }
             }
 
-            // Calendar Month Card
+            // Calendar Month Card with Heatmap
             item {
                 CalendarMonthCard(
                     monthTitle = displayedMonthTitle,
                     daysInGrid = daysInGrid,
                     selectedCalendar = selectedDateCalendar.value,
                     dateEventCountMap = dateEventCountMap,
+                    attendanceMap = attendanceMap,
                     onPreviousMonth = {
                         val cal = displayedCalendar.value.clone() as Calendar
                         cal.add(Calendar.MONTH, -1)
@@ -154,7 +265,10 @@ fun CalendarScreen(
                             set(Calendar.DAY_OF_MONTH, day.dayNumber)
                         }
                         selectedDateCalendar.value = cal
-                    }
+                    },
+                    onMarkPresent = onMarkPresent,
+                    onMarkAbsent = onMarkAbsent,
+                    onClearAttendance = onClearAttendance
                 )
             }
 
@@ -208,18 +322,8 @@ fun CalendarScreen(
                 items(selectedDayAssignments, key = { it.id }) { assignment ->
                     ScheduleItemCard(
                         assignment = assignment,
-                        onStatusToggle = {
-                            val newStatus = if (assignment.status.equals("Completed", ignoreCase = true)) "Pending" else "Completed"
-                            coroutineScope.launch {
-                                withContext(Dispatchers.IO) {
-                                    database.assignmentDao().updateAssignment(assignment.copy(status = newStatus))
-                                }
-                                refreshAssignments()
-                            }
-                        },
-                        onLongClick = {
-                            assignmentToDelete = assignment
-                        }
+                        onStatusToggle = { onToggleAssignmentStatus(assignment) },
+                        onLongClick = { assignmentToDelete = assignment }
                     )
                 }
             }
@@ -246,13 +350,8 @@ fun CalendarScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        coroutineScope.launch {
-                            withContext(Dispatchers.IO) {
-                                database.assignmentDao().deleteAssignment(assignment)
-                            }
-                            refreshAssignments()
-                            assignmentToDelete = null
-                        }
+                        onDeleteAssignment(assignment)
+                        assignmentToDelete = null
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = BrandBlack)
@@ -273,26 +372,46 @@ fun CalendarScreen(
         )
     }
 
-    // Add Event Dialog
+    // Add Event Dialog with Course Dropdown
     if (showAddDialog) {
         AddEventDialog(
             initialDate = selectedDateShort,
+            availableCourses = availableCourses,
             onDismiss = { showAddDialog = false },
             onConfirm = { title, subject, dueDate ->
-                coroutineScope.launch {
-                    val newAssignment = Assignment(
-                        title = title,
-                        subject = subject,
-                        dueDate = dueDate,
-                        status = "Pending"
-                    )
-                    withContext(Dispatchers.IO) {
-                        database.assignmentDao().insertAssignment(newAssignment)
-                    }
-                    refreshAssignments()
-                    showAddDialog = false
-                }
+                onAddAssignment(title, subject, dueDate)
+                showAddDialog = false
             }
+        )
+    }
+}
+
+@androidx.compose.ui.tooling.preview.Preview(showBackground = true, name = "Calendar Screen Preview")
+@Composable
+fun CalendarScreenPreview() {
+    val sampleAssignments = listOf(
+        Assignment(
+            id = 1,
+            title = "Algorithm Complexity Analysis",
+            dueDate = SimpleDateFormat("d MMMM yyyy", LocalLocale.current.platformLocale).format(Calendar.getInstance().time),
+            subject = "CS301",
+            status = "Pending"
+        ),
+        Assignment(
+            id = 2,
+            title = "Database Normalization Quiz",
+            dueDate = SimpleDateFormat("d MMMM yyyy", LocalLocale.current.platformLocale).format(Calendar.getInstance().time),
+            subject = "CS204",
+            status = "Completed"
+        )
+    )
+
+    StudentOrganizerTheme {
+        CalendarScreenContent(
+            assignments = sampleAssignments,
+            attendanceMap = mapOf(
+                SimpleDateFormat("yyyy-MM-dd", LocalLocale.current.platformLocale).format(Calendar.getInstance().time) to "PRESENT"
+            )
         )
     }
 }
