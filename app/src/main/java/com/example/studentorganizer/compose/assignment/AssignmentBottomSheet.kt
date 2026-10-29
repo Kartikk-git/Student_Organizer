@@ -65,6 +65,7 @@ class AssignmentBottomSheetDialogFragment : BottomSheetDialogFragment() {
             val behavior = BottomSheetBehavior.from(it)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.skipCollapsed = true
+            it.setBackgroundColor(android.graphics.Color.TRANSPARENT)
         }
         d?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
@@ -144,7 +145,6 @@ fun AssignmentBottomSheetContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .imePadding()
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
             .padding(horizontal = 20.dp, vertical = 16.dp)
             .verticalScroll(rememberScrollState())

@@ -67,14 +67,14 @@
                         android:id="@+id/tv_semester_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5"
+                        android:text="--"
                         android:textColor="@color/gray_light"
                         android:textSize="13sp" />
                     <TextView
                         android:id="@+id/tv_semester_year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="• 2024-25"
+                        android:text="• ----"
                         android:textColor="@color/gray_light"
                         android:textSize="13sp"
                         android:paddingHorizontal="4dp"/>

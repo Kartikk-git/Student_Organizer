@@ -48,9 +48,15 @@ class ProfileFragment : Fragment() {
         val email = sharedPref.getString("email", "student@example.com")
 
         val b = _binding ?: return
+        val roll = sharedPref.getString("roll", null)
+        val semester = sharedPref.getString("semester", null)
+        val cgpa = sharedPref.getString("cgpa", null)
+
         b.tvName.text = if (!name.isNullOrBlank()) name else "Student"
         b.tvEmail.text = if (!email.isNullOrBlank()) email else "student@example.com"
-        b.tvRoll.text = "Roll No: SO-2026"
+        b.tvRoll.text = if (!roll.isNullOrBlank()) "Roll No: $roll" else "Roll No: --"
+        b.tvSemester.text = if (!semester.isNullOrBlank()) semester else "--"
+        b.tvCgpa.text = if (!cgpa.isNullOrBlank()) cgpa else "--"
 
         // Update Attendance calculation from database
         viewLifecycleOwner.lifecycleScope.launch {
@@ -62,7 +68,7 @@ class ProfileFragment : Fragment() {
                 val percentage = ((presentCount.toDouble() / totalAttendance) * 100).toInt()
                 _binding?.tvAttendance?.text = "$percentage%"
             } else {
-                _binding?.tvAttendance?.text = "100%"
+                _binding?.tvAttendance?.text = "--"
             }
         }
     }
@@ -101,7 +107,17 @@ class ProfileFragment : Fragment() {
                         "How to Log: Go to Calendar, double-tap any date for Present, triple-tap for Absent, or long press to clear."
                     )
                     .setPositiveButton("Open Calendar") { _, _ ->
-                        activity?.findViewById<ViewPager2>(R.id.tab_viewpager)?.currentItem = 3
+                        val act = activity
+                        if (act is com.example.studentorganizer.activities.ProfileActivity) {
+                            val intent = Intent(act, com.example.studentorganizer.activities.MainActivity::class.java).apply {
+                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                                putExtra("NAVIGATE_TO_TAB", 3)
+                            }
+                            startActivity(intent)
+                            act.finish()
+                        } else {
+                            act?.findViewById<ViewPager2>(R.id.tab_viewpager)?.currentItem = 3
+                        }
                     }
                     .setNegativeButton("Close", null)
                     .show()

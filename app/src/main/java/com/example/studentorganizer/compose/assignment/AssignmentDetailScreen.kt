@@ -118,7 +118,7 @@ fun AssignmentDetailScreen(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = if (isCompleted) "✓ Completed" else "⏳ Pending",
+                        text = if (isCompleted) "Completed" else "Pending",
                         color = if (isCompleted) Color(0xFF2E7D32) else Color(0xFFE65100),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,

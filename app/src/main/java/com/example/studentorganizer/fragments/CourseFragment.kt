@@ -97,13 +97,28 @@ class CourseFragment : Fragment() {
             onItemLongClick = { course ->
                 showDeleteCourseDialog(course)
             },
-            onMaterialsClick = { course ->
-                handleMaterialsClick(course)
-            },
             getAssignmentStats = { course ->
                 calculateAssignmentStats(course)
+            },
+            getNotesCount = { course ->
+                calculateNotesCount(course)
             }
         )
+    }
+
+    private fun calculateNotesCount(course: Course): Int {
+        val courseCode = course.code.trim().lowercase()
+        val courseName = course.name.trim().lowercase()
+
+        return notesList.count { note ->
+            val subj = note.subject.trim().lowercase()
+            val title = note.title.trim().lowercase()
+
+            (courseCode.isNotEmpty() && subj.isNotEmpty() && (subj == courseCode || subj.contains(courseCode) || courseCode.contains(subj))) ||
+            (courseName.isNotEmpty() && subj.isNotEmpty() && (courseName == subj || courseName.contains(subj) || subj.contains(courseName))) ||
+            (courseCode.isNotEmpty() && title.contains(courseCode)) ||
+            (courseName.isNotEmpty() && title.contains(courseName))
+        }
     }
 
     private fun calculateAssignmentStats(course: Course): Pair<Int, Int> {
@@ -114,50 +129,15 @@ class CourseFragment : Fragment() {
             val subj = assignment.subject.trim().lowercase()
             val title = assignment.title.trim().lowercase()
 
-            subj == courseCode ||
-                    subj.contains(courseCode) ||
-                    courseCode.contains(subj) ||
-                    title.contains(courseCode) ||
-                    title.contains(courseName) ||
-                    courseName.contains(subj)
+            (courseCode.isNotEmpty() && subj.isNotEmpty() && (subj == courseCode || subj.contains(courseCode) || courseCode.contains(subj))) ||
+            (courseName.isNotEmpty() && subj.isNotEmpty() && (courseName == subj || courseName.contains(subj) || subj.contains(courseName))) ||
+            (courseCode.isNotEmpty() && title.contains(courseCode)) ||
+            (courseName.isNotEmpty() && title.contains(courseName))
         }
 
         val total = matchedAssignments.size
         val completed = matchedAssignments.count { it.status.equals("Completed", ignoreCase = true) }
         return Pair(completed, total)
-    }
-
-    private fun handleMaterialsClick(course: Course) {
-        val courseCode = course.code.trim().lowercase()
-        val courseName = course.name.trim().lowercase()
-
-        val matchedNotes = notesList.filter { note ->
-            val subj = note.subject.trim().lowercase()
-            val title = note.title.trim().lowercase()
-
-            subj == courseCode ||
-                    subj.contains(courseCode) ||
-                    courseCode.contains(subj) ||
-                    title.contains(courseCode) ||
-                    title.contains(courseName) ||
-                    courseName.contains(subj)
-        }
-
-        if (matchedNotes.isNotEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "Found ${matchedNotes.size} study note(s) for ${course.code}. Opening Notes...",
-                Toast.LENGTH_SHORT
-            ).show()
-            // Navigate to Notes Tab (Tab index 2)
-            activity?.findViewById<ViewPager2>(R.id.tab_viewpager)?.currentItem = 2
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "No notes found for ${course.code}. Add course materials in the Notes tab!",
-                Toast.LENGTH_LONG
-            ).show()
-        }
     }
 
     private fun showCourseOptionsMenu(course: Course, anchorView: View) {

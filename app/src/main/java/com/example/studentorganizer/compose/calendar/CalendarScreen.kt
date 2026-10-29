@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.studentorganizer.database.AppDatabase
 import com.example.studentorganizer.database.entity.Assignment
 import com.example.studentorganizer.database.entity.AttendanceRecord
@@ -178,6 +179,28 @@ fun CalendarScreenContent(
         assignments.filter { isDateMatching(it.dueDate, selectedDateCalendar.value) }
     }
 
+    val nextUpcomingAssignments = remember(assignments, selectedDateCalendar.value) {
+        val currentStart = (selectedDateCalendar.value.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        assignments
+            .filter { a ->
+                !isDateMatching(a.dueDate, selectedDateCalendar.value)
+            }
+            .mapNotNull { a ->
+                val cal = parseDueDateToCalendar(a.dueDate)
+                if (cal != null && (cal.timeInMillis >= currentStart.timeInMillis || !a.status.equals("Completed", ignoreCase = true))) {
+                    Pair(a, cal)
+                } else null
+            }
+            .sortedBy { it.second.timeInMillis }
+            .map { it.first }
+    }
+
     val dateEventCountMap = remember(assignments) {
         val map = mutableMapOf<String, Int>()
         for (a in assignments) {
@@ -218,18 +241,18 @@ fun CalendarScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 12.dp)
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
                         text = "Calendar",
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = "Keep track of your schedule and daily attendance",
-                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = 13.sp,
                         color = TextSecondary
                     )
                 }
@@ -284,13 +307,14 @@ fun CalendarScreenContent(
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
                             text = if (isSameDayCalendar(selectedDateCalendar.value, todayCalendar)) "Today's Schedule" else "Schedule",
-                            style = MaterialTheme.typography.titleLarge,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground
                         )
+                        Spacer(modifier = Modifier.height(2.dp))
                         Text(
                             text = selectedDateTitle,
-                            style = MaterialTheme.typography.bodyMedium,
+                            fontSize = 13.sp,
                             color = TextSecondary
                         )
                     }
@@ -320,6 +344,56 @@ fun CalendarScreenContent(
                 }
             } else {
                 items(selectedDayAssignments, key = { it.id }) { assignment ->
+                    ScheduleItemCard(
+                        assignment = assignment,
+                        onStatusToggle = { onToggleAssignmentStatus(assignment) },
+                        onLongClick = { assignmentToDelete = assignment }
+                    )
+                }
+            }
+
+            // Next Immediate / Upcoming Events Section
+            if (nextUpcomingAssignments.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Next Upcoming Schedule",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = "Upcoming tasks and event deadlines",
+                                fontSize = 12.sp,
+                                color = TextSecondary
+                            )
+                        }
+
+                        Surface(
+                            color = BrandGraySubtle,
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text(
+                                text = "${nextUpcomingAssignments.size} upcoming",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = BrandBlack,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                            )
+                        }
+                    }
+                }
+
+                items(nextUpcomingAssignments, key = { "upcoming_${it.id}" }) { assignment ->
                     ScheduleItemCard(
                         assignment = assignment,
                         onStatusToggle = { onToggleAssignmentStatus(assignment) },

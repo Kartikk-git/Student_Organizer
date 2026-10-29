@@ -194,21 +194,11 @@ fun CourseDetailScreen(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = if (course.progress >= 80) "Advanced / Near Completion" else if (course.progress >= 40) "In Progress" else "Just Started",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = BrandGrayMedium
-                        )
-                        Text(
-                            text = "Semester 5 • 2024-25",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = BrandGrayMedium
-                        )
-                    }
+                    Text(
+                        text = if (course.progress >= 80) "Advanced / Near Completion" else if (course.progress >= 40) "In Progress" else "Just Started",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = BrandGrayMedium
+                    )
                 }
             }
 

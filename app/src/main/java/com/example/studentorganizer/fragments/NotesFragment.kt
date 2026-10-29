@@ -38,6 +38,7 @@ class NotesFragment : Fragment() {
 
     private var currentDetailNote: Notes? = null
     private var backPressedCallback: OnBackPressedCallback? = null
+    private var selectedSubject: String = "ALL"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,10 +87,7 @@ class NotesFragment : Fragment() {
 
     private fun setupRecyclerView() {
         noteAdapter = NoteAdapter(
-            notes = notesList,
-            onItemClick = { note ->
-                showNoteDetails(note)
-            },
+            onItemClick = null, // Tapping card does not open details; only 3-dots menu does
             onMoreOptionsClick = { note, anchorView ->
                 showNoteOptionsMenu(note, anchorView)
             },
@@ -117,12 +115,16 @@ class NotesFragment : Fragment() {
 
             if (notes.isEmpty()) {
                 b.layoutEmptyNotes.visibility = View.VISIBLE
+                b.scrollSubjectChips.visibility = View.GONE
                 b.rvNotes.visibility = View.GONE
             } else {
                 b.layoutEmptyNotes.visibility = View.GONE
+                b.scrollSubjectChips.visibility = View.VISIBLE
                 b.rvNotes.visibility = View.VISIBLE
             }
-            noteAdapter.notifyDataSetChanged()
+
+            renderSubjectChips(notes)
+            noteAdapter.setGroupedNotes(notesList, courseList, selectedSubject)
 
             // If detail screen is open, re-render it
             currentDetailNote?.let { current ->
@@ -135,6 +137,64 @@ class NotesFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun renderSubjectChips(notes: List<Notes>) {
+        val b = _binding ?: return
+        val layout = b.layoutSubjectChips
+        layout.removeAllViews()
+
+        val subjects = notes.map { it.subject.trim() }.filter { it.isNotBlank() }.distinct()
+        if (subjects.size <= 1) {
+            b.scrollSubjectChips.visibility = View.GONE
+            return
+        }
+        b.scrollSubjectChips.visibility = View.VISIBLE
+
+        // Add "All" chip
+        val allChip = createFilterChip("All (${notes.size})", selectedSubject.equals("ALL", ignoreCase = true)) {
+            selectedSubject = "ALL"
+            renderSubjectChips(notesList)
+            noteAdapter.setGroupedNotes(notesList, courseList, selectedSubject)
+        }
+        layout.addView(allChip)
+
+        subjects.forEach { subj ->
+            val count = notes.count { it.subject.trim().equals(subj, ignoreCase = true) }
+            val isSelected = selectedSubject.trim().equals(subj, ignoreCase = true)
+            val chip = createFilterChip("$subj ($count)", isSelected) {
+                selectedSubject = subj
+                renderSubjectChips(notesList)
+                noteAdapter.setGroupedNotes(notesList, courseList, selectedSubject)
+            }
+            layout.addView(chip)
+        }
+    }
+
+    private fun createFilterChip(text: String, isSelected: Boolean, onClick: () -> Unit): android.widget.TextView {
+        val tv = android.widget.TextView(requireContext()).apply {
+            this.text = text
+            textSize = 12f
+            setPadding(32, 16, 32, 16)
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            setBackgroundResource(com.example.studentorganizer.R.drawable.btn_round)
+            if (isSelected) {
+                backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.BLACK)
+                setTextColor(android.graphics.Color.WHITE)
+            } else {
+                backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#F4F4F5"))
+                setTextColor(android.graphics.Color.parseColor("#333333"))
+            }
+            val params = android.widget.LinearLayout.LayoutParams(
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+                android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(8, 0, 8, 0)
+            }
+            layoutParams = params
+            setOnClickListener { onClick() }
+        }
+        return tv
     }
 
     private fun showNoteOptionsMenu(note: Notes, anchorView: View) {
@@ -203,13 +263,16 @@ class NotesFragment : Fragment() {
         val bottomSheet = NoteBottomSheetDialogFragment.newInstance(
             note = null,
             courses = courseList
-        ) { title, subject, content ->
+        ) { title, subject, content, attachmentUri, attachmentName, attachmentType ->
             val date = SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(Date())
             val newNote = Notes(
                 title = title,
                 subject = subject,
                 content = content,
-                date = date
+                date = date,
+                attachmentUri = attachmentUri,
+                attachmentName = attachmentName,
+                attachmentType = attachmentType
             )
             viewLifecycleOwner.lifecycleScope.launch {
                 database.notesDao().insertNote(newNote)
@@ -228,13 +291,16 @@ class NotesFragment : Fragment() {
         val bottomSheet = NoteBottomSheetDialogFragment.newInstance(
             note = note,
             courses = courseList
-        ) { title, subject, content ->
+        ) { title, subject, content, attachmentUri, attachmentName, attachmentType ->
             val updatedNote = Notes(
                 id = note.id,
                 title = title,
                 subject = subject,
                 content = content,
-                date = note.date
+                date = note.date,
+                attachmentUri = attachmentUri,
+                attachmentName = attachmentName,
+                attachmentType = attachmentType
             )
             viewLifecycleOwner.lifecycleScope.launch {
                 database.notesDao().updateNote(updatedNote)

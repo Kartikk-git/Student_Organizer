@@ -23,7 +23,7 @@ import com.example.studentorganizer.database.entity.User
         Assignment::class,
         AttendanceRecord::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -35,6 +35,14 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun attendanceDao(): AttendanceDao
 
     companion object {
+
+        private val MIGRATION_3_4 = object : androidx.room.migration.Migration(3, 4) {
+            override fun migrate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE notes ADD COLUMN attachmentUri TEXT")
+                db.execSQL("ALTER TABLE notes ADD COLUMN attachmentName TEXT")
+                db.execSQL("ALTER TABLE notes ADD COLUMN attachmentType TEXT")
+            }
+        }
 
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -48,6 +56,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "student_organizer_database"
                 )
+                    .addMigrations(MIGRATION_3_4)
                     .fallbackToDestructiveMigration(true)
                     .build()
 

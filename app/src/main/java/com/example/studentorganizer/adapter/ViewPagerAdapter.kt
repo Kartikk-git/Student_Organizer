@@ -12,7 +12,7 @@ import com.example.studentorganizer.fragments.ProfileFragment
 
 class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
-    override fun getItemCount(): Int = 6
+    override fun getItemCount(): Int = 5
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
@@ -21,7 +21,6 @@ class ViewPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activi
             2 -> NotesFragment()
             3 -> CalendarFragment()
             4 -> AssignmentFragment()
-            5 -> ProfileFragment()
             else -> HomeFragment()
         }
     }

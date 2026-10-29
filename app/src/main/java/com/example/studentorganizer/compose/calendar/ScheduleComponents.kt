@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -111,6 +112,25 @@ fun ScheduleItemCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+                val relativeInfo = remember(assignment.dueDate) {
+                    val cal = parseDueDateToCalendar(assignment.dueDate)
+                    if (cal != null) {
+                        val today = java.util.Calendar.getInstance().apply {
+                            set(java.util.Calendar.HOUR_OF_DAY, 0)
+                            set(java.util.Calendar.MINUTE, 0)
+                            set(java.util.Calendar.SECOND, 0)
+                            set(java.util.Calendar.MILLISECOND, 0)
+                        }
+                        val diff = ((cal.timeInMillis - today.timeInMillis) / (1000 * 60 * 60 * 24)).toInt()
+                        when {
+                            diff < 0 -> "Overdue"
+                            diff == 0 -> "Today"
+                            diff == 1 -> "Tomorrow"
+                            else -> "In $diff days"
+                        }
+                    } else null
+                }
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.Schedule,
@@ -120,7 +140,7 @@ fun ScheduleItemCard(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = assignment.dueDate,
+                        text = if (relativeInfo != null) "${assignment.dueDate} • $relativeInfo" else assignment.dueDate,
                         style = MaterialTheme.typography.labelSmall,
                         color = TextSecondary
                     )

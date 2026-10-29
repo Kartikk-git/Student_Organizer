@@ -96,7 +96,60 @@ fun isSameDayCalendar(c1: Calendar, c2: Calendar): Boolean {
             c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)
 }
 
+fun parseDueDateToCalendar(dateStr: String): Calendar? {
+    if (dateStr.isBlank()) return null
+    val formats = listOf(
+        "d MMMM yyyy",
+        "dd MMMM yyyy",
+        "d MMM yyyy",
+        "dd MMM yyyy",
+        "d/M/yyyy",
+        "dd/MM/yyyy",
+        "d-M-yyyy",
+        "dd-MM-yyyy",
+        "yyyy-MM-dd"
+    )
+    for (f in formats) {
+        try {
+            val sdf = SimpleDateFormat(f, Locale.getDefault()).apply { isLenient = false }
+            val parsed = sdf.parse(dateStr.trim())
+            if (parsed != null) {
+                return Calendar.getInstance().apply {
+                    time = parsed
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+            }
+        } catch (_: Exception) {}
+    }
+    // Also try ENGLISH Locale in case default locale differs from month names
+    for (f in formats) {
+        try {
+            val sdf = SimpleDateFormat(f, Locale.ENGLISH).apply { isLenient = false }
+            val parsed = sdf.parse(dateStr.trim())
+            if (parsed != null) {
+                return Calendar.getInstance().apply {
+                    time = parsed
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+            }
+        } catch (_: Exception) {}
+    }
+    return null
+}
+
 fun isDateMatching(dueDateString: String, selectedDate: Calendar): Boolean {
+    val dueCal = parseDueDateToCalendar(dueDateString)
+    if (dueCal != null) {
+        return dueCal.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                dueCal.get(Calendar.DAY_OF_YEAR) == selectedDate.get(Calendar.DAY_OF_YEAR)
+    }
+
     val normalizedDue = normalizeDateString(dueDateString)
     val day = selectedDate.get(Calendar.DAY_OF_MONTH)
     val month = selectedDate.get(Calendar.MONTH) + 1
@@ -105,7 +158,7 @@ fun isDateMatching(dueDateString: String, selectedDate: Calendar): Boolean {
     val compactStr = "$day/$month/$year"
     if (normalizedDue == compactStr) return true
 
-    val formats = listOf("d MMMM yyyy", "dd MMMM yyyy", "dd MMM yyyy", "d MMM yyyy")
+    val formats = listOf("d MMMM yyyy", "dd MMMM yyyy", "d MMM yyyy", "dd MMM yyyy")
     for (f in formats) {
         val formatted = SimpleDateFormat(f, Locale.getDefault()).format(selectedDate.time)
         if (dueDateString.equals(formatted, ignoreCase = true)) return true
@@ -129,6 +182,10 @@ fun normalizeDateString(dateStr: String): String {
         if (d != null && m != null && y != null) {
             return "$d/$m/$y"
         }
+    }
+    val cal = parseDueDateToCalendar(trimmed)
+    if (cal != null) {
+        return "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
     }
     return trimmed.lowercase(Locale.getDefault())
 }

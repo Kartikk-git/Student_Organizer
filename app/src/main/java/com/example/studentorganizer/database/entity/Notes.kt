@@ -10,5 +10,8 @@ data class Notes(
     val title: String,
     val subject: String,
     val content: String,
-    val date: String
+    val date: String,
+    val attachmentUri: String? = null,
+    val attachmentName: String? = null,
+    val attachmentType: String? = null // "IMAGE" or "PDF"
 )

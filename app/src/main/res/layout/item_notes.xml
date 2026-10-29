@@ -83,6 +83,40 @@
             android:textColor="@color/gray_dark"
             android:textSize="13sp" />
 
+        <!-- Attachment Indicator Badge (shown if photo or pdf is attached) -->
+        <LinearLayout
+            android:id="@+id/layoutAttachmentBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_round"
+            android:backgroundTint="#F4F4F5"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivAttachmentIcon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_notes"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/tvAttachmentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="Photo Attached"
+                android:textColor="@color/black"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

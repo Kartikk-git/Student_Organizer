@@ -17,7 +17,8 @@ class CourseAdapter(
     var onItemLongClick: ((Course) -> Unit)? = null,
     var onMoreOptionsClick: ((Course, View) -> Unit)? = null,
     var onMaterialsClick: ((Course) -> Unit)? = null,
-    var getAssignmentStats: ((Course) -> Pair<Int, Int>)? = null // Pair(completedCount, totalCount)
+    var getAssignmentStats: ((Course) -> Pair<Int, Int>)? = null, // Pair(completedCount, totalCount)
+    var getNotesCount: ((Course) -> Int)? = null
 ) : RecyclerView.Adapter<CourseAdapter.CourseViewHolder>() {
 
     class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -74,10 +75,22 @@ class CourseAdapter(
                         setAssignmentState(holder, course)
                     }
                     R.id.btnMaterials -> {
-                        onMaterialsClick?.invoke(course)
+                        setMaterialsState(holder, course)
                     }
                 }
             }
+        }
+    }
+
+    private fun setMaterialsState(holder: CourseViewHolder, course: Course) {
+        val count = getNotesCount?.invoke(course) ?: 0
+        holder.tvProgressLabel.text = "Study Material Available"
+        if (count <= 0) {
+            holder.tvProgress.text = "NA"
+            holder.progressBar.progress = 0
+        } else {
+            holder.tvProgress.text = count.toString()
+            holder.progressBar.progress = 100
         }
     }
 

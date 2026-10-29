@@ -1,5 +1,6 @@
 package com.example.studentorganizer.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -72,10 +73,34 @@ class MainActivity : AppCompatActivity() {
         updateHeaderName()
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        val tab = intent.getIntExtra("NAVIGATE_TO_TAB", -1)
+        if (tab != -1) {
+            navigateToTab(tab)
+        }
+    }
+
     private fun updateHeaderName() {
         val sharedPref = getSharedPreferences("Details", MODE_PRIVATE)
         val user = sharedPref.getString("name", "Student")
         binding.tvName.text = if (!user.isNullOrBlank()) user else "Student"
+
+        val semester = sharedPref.getString("semester", null)
+        val year = sharedPref.getString("academicYear", null)
+
+        binding.tvSemesterNumber.text = if (!semester.isNullOrBlank()) semester else "--"
+        binding.tvSemesterYear.text = if (!year.isNullOrBlank()) "• $year" else "• ----"
+    }
+
+    fun navigateToTab(targetPage: Int) {
+        val navMenu = binding.bottomNavigation.menu
+        if (targetPage in 0 until navMenu.size) {
+            val itemId = navMenu.getItem(targetPage).itemId
+            binding.bottomNavigation.selectedItemId = itemId
+        } else {
+            binding.tabViewpager.currentItem = targetPage
+        }
     }
 
     private fun uncheckAllBottomNavItems() {
@@ -90,7 +115,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupViewPager(viewpager: ViewPager2) {
         val adapter = ViewPagerAdapter(this)
         viewpager.adapter = adapter
-        viewpager.offscreenPageLimit = 5
+        viewpager.offscreenPageLimit = 4
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -105,7 +130,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.action_profile -> {
-                binding.tabViewpager.currentItem = 5
+                startActivity(Intent(this, ProfileActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)

@@ -45,12 +45,12 @@ class AssignmentAdapter(
 
         val isCompleted = assignment.status.equals("Completed", ignoreCase = true)
         if (isCompleted) {
-            holder.binding.tvAssignmentStatus.text = "✓ Completed"
+            holder.binding.tvAssignmentStatus.text = "Completed"
             holder.binding.tvAssignmentStatus.setTextColor(Color.parseColor("#2E7D32"))
             holder.binding.tvAssignmentStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#E8F5E9"))
             holder.binding.btnToggleStatus.text = "Mark Pending"
         } else {
-            holder.binding.tvAssignmentStatus.text = "⏳ Pending"
+            holder.binding.tvAssignmentStatus.text = "Pending"
             holder.binding.tvAssignmentStatus.setTextColor(Color.parseColor("#E65100"))
             holder.binding.tvAssignmentStatus.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#FFF3E0"))
             holder.binding.btnToggleStatus.text = "Mark Done"
